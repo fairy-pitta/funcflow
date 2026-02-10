@@ -6,12 +6,20 @@ This directory contains detailed implementation plans for funcflow, an MCP serve
 
 ## Plan Documents
 
+### Core Implementation
+
 1. **[01-architecture.md](./01-architecture.md)** - System architecture and technology stack
 2. **[02-mcp-server.md](./02-mcp-server.md)** - MCP server implementation
 3. **[03-typescript-analyzer.md](./03-typescript-analyzer.md)** - TypeScript static analysis engine
 4. **[04-graph-builder.md](./04-graph-builder.md)** - Call graph construction
 5. **[05-visualizer.md](./05-visualizer.md)** - Visualization (Mermaid, ASCII, JSON)
 6. **[06-testing.md](./06-testing.md)** - Testing strategy
+
+### OSS & Community
+
+7. **[07-documentation.md](./07-documentation.md)** - Documentation strategy (README, guides, examples, website)
+8. **[08-oss-setup.md](./08-oss-setup.md)** - OSS setup (license, CI/CD, npm publishing, GitHub config)
+9. **[09-community-promotion.md](./09-community-promotion.md)** - Community building and promotion strategy
 
 ## Implementation Order
 
@@ -105,6 +113,58 @@ This directory contains detailed implementation plans for funcflow, an MCP serve
    - Handle edge cases
 
 **Deliverable:** Production-ready v0.1.0
+
+### Phase 6: OSS Preparation (Week 3-4)
+
+**Goal:** Prepare for public release
+
+1. **Documentation**
+   - Write comprehensive README
+   - Create CONTRIBUTING.md
+   - Add CODE_OF_CONDUCT.md
+   - Write getting-started guide
+   - Create example projects
+
+2. **OSS Setup**
+   - Add MIT LICENSE
+   - Configure package.json for npm
+   - Set up GitHub Actions CI/CD
+   - Add issue/PR templates
+   - Write SECURITY.md
+
+3. **Quality Assurance**
+   - Achieve >90% test coverage
+   - Fix all known bugs
+   - Optimize performance
+   - Polish error messages
+   - Cross-platform testing
+
+**Deliverable:** Ready for npm publish
+
+### Phase 7: Launch (Week 4+)
+
+**Goal:** Successful public launch
+
+1. **Soft Launch**
+   - Publish to npm (v0.1.0)
+   - Share with friends/colleagues
+   - Gather initial feedback
+   - Fix critical issues
+
+2. **Public Launch**
+   - Post on Hacker News (Show HN)
+   - Share on Reddit (multiple subreddits)
+   - Announce on Twitter/X
+   - Write blog post on Dev.to
+   - Launch on Product Hunt
+
+3. **Community Building**
+   - Respond to all feedback
+   - Fix issues quickly
+   - Engage with users
+   - Build contributor community
+
+**Deliverable:** Growing user base and community
 
 ## Development Workflow
 
