@@ -1,12 +1,14 @@
 # funcflow
 
-> MCP server for analyzing function call graphs in TypeScript/JavaScript codebases
+[![npm version](https://badge.fury.io/js/funcflow.svg)](https://www.npmjs.com/package/funcflow)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-**Status:** 🚧 In Development | [See detailed implementation plans](./plan/)
+> MCP server for analyzing function call graphs in TypeScript/JavaScript codebases
 
 ## What is funcflow?
 
-funcflow helps developers understand complex codebases by analyzing and visualizing function call relationships. It integrates seamlessly with [Claude Code](https://claude.com/claude-code) via the Model Context Protocol (MCP).
+funcflow helps developers understand complex codebases by analyzing and visualizing function call relationships. It integrates seamlessly with [Claude Code](https://claude.ai/code) via the Model Context Protocol (MCP).
 
 Simply ask Claude "Show me what calls getUserById" and funcflow will automatically:
 
@@ -15,34 +17,19 @@ Simply ask Claude "Show me what calls getUserById" and funcflow will automatical
 - Generate beautiful Mermaid diagrams
 - Show results directly in Claude Code
 
-## Features (Planned)
+## Features
 
-- 🔍 **Smart Analysis** - Uses TypeScript Compiler API for accurate type-aware analysis
-- 📊 **Beautiful Visualizations** - Mermaid diagrams, ASCII trees, and JSON export
-- 🎯 **Configurable Depth** - Control how deep to traverse the call graph
-- 🚀 **Fast Performance** - Analyzes most functions in <500ms
-- 🔌 **Zero Config** - Works out of the box with any TypeScript/JavaScript project
-- 💯 **Free & Open Source** - MIT licensed, always free
+- **Smart Analysis** - Uses TypeScript Compiler API for accurate type-aware analysis
+- **Beautiful Visualizations** - Mermaid diagrams, ASCII trees, and JSON export
+- **Configurable Depth** - Control how deep to traverse the call graph (1-10 levels)
+- **Fast Performance** - Analyzes most functions in <500ms
+- **Zero Config** - Works out of the box with any TypeScript/JavaScript project
+- **Secure** - Path validation and input sanitization built-in
+- **Free & Open Source** - MIT licensed, always free
 
-## Project Status
+## Quick Start
 
-This project is currently in **active development**. We are working towards v0.1.0 release.
-
-### Roadmap
-
-- [ ] **Phase 1:** Core analysis engine (Week 1)
-- [ ] **Phase 2:** Graph building (Week 1-2)
-- [ ] **Phase 3:** Visualization (Week 2)
-- [ ] **Phase 4:** MCP integration (Week 2-3)
-- [ ] **Phase 5:** Testing & polish (Week 3)
-- [ ] **Phase 6:** Documentation & OSS setup (Week 3-4)
-- [ ] **Phase 7:** Public launch 🚀
-
-[See detailed implementation plan →](./plan/README.md)
-
-## Quick Start (Coming Soon)
-
-Once released, installation will be simple:
+### Installation
 
 ```bash
 # Using npx (no installation needed)
@@ -52,7 +39,9 @@ npx funcflow
 npm install -g funcflow
 ```
 
-Add to your Claude Code configuration:
+### Configure Claude Code
+
+Add to your Claude Code MCP configuration (`~/.claude/settings.json`):
 
 ```json
 {
@@ -65,73 +54,169 @@ Add to your Claude Code configuration:
 }
 ```
 
-## Documentation
+### Usage
 
-Comprehensive documentation is being prepared:
+Once configured, ask Claude naturally:
 
-- 📚 [Implementation Plans](./plan/) - Detailed technical plans
-- 🚀 Getting Started Guide (Coming soon)
-- 📖 API Reference (Coming soon)
-- 💡 Usage Examples (Coming soon)
+```
+You: "Show me what calls the getUserById function"
+You: "What does processOrder call?"
+You: "Analyze the handleCheckout function with depth 3"
+```
 
-## Contributing
+Claude will automatically use funcflow to analyze your code and show beautiful call graph visualizations.
 
-We welcome contributions! Here's how you can help:
+## MCP Tools
 
-1. **⭐ Star this repo** to show your support
-2. **🐛 Report bugs** by opening an issue
-3. **💡 Suggest features** in discussions
-4. **🔧 Submit PRs** (see [CONTRIBUTING.md](./CONTRIBUTING.md) - coming soon)
+funcflow provides three MCP tools:
+
+### analyze_function_calls
+
+Analyze function call relationships and generate visualizations.
+
+**Parameters:**
+
+- `functionName` (required): Name of the function to analyze
+- `projectRoot` (required): Absolute path to project root
+- `filePath` (optional): Specific file to search in
+- `depth` (optional, default: 2): How deep to traverse (1-10)
+- `direction` (optional, default: "both"): "callers", "callees", or "both"
+
+### find_function
+
+Find all definitions of a function by name.
+
+**Parameters:**
+
+- `functionName` (required): Name of the function to find
+- `projectRoot` (required): Absolute path to project root
+
+### visualize_callgraph
+
+Generate a visualization in a specific format.
+
+**Parameters:**
+
+- `functionName` (required): Name of the function
+- `projectRoot` (required): Absolute path to project root
+- `format` (required): "mermaid", "ascii", or "json"
+- `depth` (optional, default: 2): How deep to traverse
+- `direction` (optional, default: "both"): Analysis direction
+
+## Example Output
+
+### Mermaid Diagram
+
+```mermaid
+graph TD
+    getUserById["getUserById<br/>src/users.ts:45"]
+    handleRequest["handleRequest<br/>src/api.ts:12"]
+    authenticate["authenticate<br/>src/auth.ts:78"]
+    fetchFromDb["fetchFromDb<br/>src/db.ts:23"]
+
+    handleRequest --> getUserById
+    authenticate --> getUserById
+    getUserById --> fetchFromDb
+
+    style getUserById fill:#f9f,stroke:#333,stroke-width:4px
+```
+
+### ASCII Tree
+
+```
+getUserById (src/users.ts:45) ●
+├── Called by:
+│   ├── handleRequest (src/api.ts:12)
+│   └── authenticate (src/auth.ts:78)
+└── Calls:
+    └── fetchFromDb (src/db.ts:23)
+```
 
 ## Development
-
-Want to contribute or run locally?
 
 ```bash
 # Clone the repository
 git clone https://github.com/fairy-pitta/funcflow.git
 cd funcflow
 
-# Install dependencies (coming soon)
+# Install dependencies
 npm install
-
-# Run in development mode
-npm run dev
 
 # Run tests
 npm test
 
+# Run tests with coverage
+npm run test:coverage
+
 # Build
 npm run build
+
+# Development mode (watch)
+npm run dev
 ```
 
-## Why funcflow?
+## Configuration
 
-Understanding code is hard. Especially when:
+funcflow works with zero configuration. It automatically detects:
 
-- Jumping between files to trace function calls
-- Trying to understand legacy code
-- Refactoring without breaking things
-- Reviewing pull requests
+- `tsconfig.json` for TypeScript projects
+- JavaScript/JSX/TSX files
 
-funcflow makes it easy by visualizing the entire call graph instantly.
+### Environment Variables
 
-## Inspiration
+- `FUNCFLOW_LOG_LEVEL`: Logging level (`debug`, `info`, `warn`, `error`). Default: `info`
 
-This project was inspired by a need identified on Hacker News: developers want better tools to understand function call relationships, especially when using AI coding assistants like Claude Code.
+## Project Structure
+
+```
+funcflow/
+├── src/
+│   ├── analyzer/       # TypeScript analysis engine
+│   │   ├── project-scanner.ts
+│   │   ├── function-finder.ts
+│   │   ├── call-analyzer.ts
+│   │   └── typescript-analyzer.ts
+│   ├── graph/          # Call graph building
+│   │   ├── types.ts
+│   │   └── builder.ts
+│   ├── visualizer/     # Output generation
+│   │   ├── mermaid.ts
+│   │   ├── ascii.ts
+│   │   └── json.ts
+│   ├── mcp/            # MCP server implementation
+│   │   ├── server.ts
+│   │   ├── handlers.ts
+│   │   ├── tools.ts
+│   │   └── types.ts
+│   ├── utils/          # Utilities
+│   │   └── logger.ts
+│   └── index.ts        # Entry point
+├── tests/              # Test suite
+├── docs/               # Documentation
+└── plan/               # Implementation plans
+```
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Write tests for your changes
+4. Ensure all tests pass (`npm test`)
+5. Commit with clear messages
+6. Open a Pull Request
 
 ## License
 
 MIT © [fairy-pitta](https://github.com/fairy-pitta)
 
-Free and open source, forever.
-
 ## Support
 
-- 🐛 [Report Issues](https://github.com/fairy-pitta/funcflow/issues)
-- 💬 [Discussions](https://github.com/fairy-pitta/funcflow/discussions) (coming soon)
-- ⭐ Star this repo if you find it useful!
+- [Report Issues](https://github.com/fairy-pitta/funcflow/issues)
+- [Discussions](https://github.com/fairy-pitta/funcflow/discussions)
+- Star this repo if you find it useful!
 
----
+## Acknowledgments
 
-**Note:** This project is under active development. Watch this repository to get notified when v0.1.0 is released!
+This project was inspired by the need for better tools to understand function call relationships, especially when using AI coding assistants like Claude Code.
