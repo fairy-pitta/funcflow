@@ -1,14 +1,11 @@
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect } from "vitest";
 import path from "path";
 import {
   parsePythonContent,
   findCallsInPythonFunction,
   isPythonBuiltIn,
 } from "../../../src/analyzer/python/python-parser.js";
-import {
-  scanPythonProject,
-  hasPythonFiles,
-} from "../../../src/analyzer/python/python-scanner.js";
+import { scanPythonProject, hasPythonFiles } from "../../../src/analyzer/python/python-scanner.js";
 import {
   analyzePythonCallGraph,
   findPythonFunctionDefinitions,
@@ -99,13 +96,7 @@ def typed_params(x: int, y: str = "default") -> bool:
 `;
       const result = parsePythonContent(code, "test.py");
 
-      expect(result.functions[0].parameters).toEqual([
-        "a",
-        "b",
-        "c",
-        "*args",
-        "**kwargs",
-      ]);
+      expect(result.functions[0].parameters).toEqual(["a", "b", "c", "*args", "**kwargs"]);
       expect(result.functions[1].parameters).toEqual(["x", "y"]);
     });
   });
@@ -300,10 +291,7 @@ def nested():
 
 describe("Python Analyzer Integration", () => {
   it("finds function definitions in Python project", async () => {
-    const locations = await findPythonFunctionDefinitions(
-      FIXTURES_PATH,
-      "process_data",
-    );
+    const locations = await findPythonFunctionDefinitions(FIXTURES_PATH, "process_data");
 
     expect(locations.length).toBeGreaterThan(0);
     expect(locations[0].file).toContain("simple.py");
@@ -311,10 +299,7 @@ describe("Python Analyzer Integration", () => {
   });
 
   it("finds method definitions in classes", async () => {
-    const locations = await findPythonFunctionDefinitions(
-      FIXTURES_PATH,
-      "get_user",
-    );
+    const locations = await findPythonFunctionDefinitions(FIXTURES_PATH, "get_user");
 
     expect(locations.length).toBeGreaterThan(0);
     expect(locations[0].file).toContain("classes.py");
@@ -368,7 +353,7 @@ describe("Python Analyzer Integration", () => {
         projectRoot: FIXTURES_PATH,
         depth: 2,
         direction: "both",
-      }),
+      })
     ).rejects.toThrow(/not found/i);
   });
 
@@ -388,8 +373,6 @@ describe("Python Analyzer Integration", () => {
     });
 
     // Depth 2 should find more nodes
-    expect(depth2Graph.nodes.size).toBeGreaterThanOrEqual(
-      depth1Graph.nodes.size,
-    );
+    expect(depth2Graph.nodes.size).toBeGreaterThanOrEqual(depth1Graph.nodes.size);
   });
 });

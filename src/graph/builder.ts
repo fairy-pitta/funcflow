@@ -53,26 +53,19 @@ export function buildCallGraph(options: BuildGraphOptions): CallGraph {
       visited,
       program,
       typeChecker,
-      depth,
+      depth
     );
   }
 
   // Build callers graph
   if (direction === "callers" || direction === "both") {
     logger.debug("Finding callers");
-    callers = findCallers(
-      program,
-      typeChecker,
-      targetFunction.name,
-      depth,
-      nodes,
-      edges,
-    );
+    callers = findCallers(program, typeChecker, targetFunction.name, depth, nodes, edges);
   }
 
   logger.info(
     `Built graph with ${nodes.size} nodes, ${edges.length} edges, ` +
-      `${callers.length} callers, ${callees.length} callees`,
+      `${callers.length} callers, ${callees.length} callees`
   );
 
   return {
@@ -96,7 +89,7 @@ function buildCallees(
   visited: Set<string>,
   program: ts.Program,
   typeChecker: ts.TypeChecker,
-  maxDepth: number,
+  maxDepth: number
 ): string[] {
   const directCallees: string[] = [];
 
@@ -162,7 +155,7 @@ function buildCallees(
         visited,
         program,
         typeChecker,
-        maxDepth,
+        maxDepth
       );
     }
   }
@@ -179,15 +172,13 @@ function findCallers(
   targetFunctionName: string,
   maxDepth: number,
   nodes: Map<string, FunctionNode>,
-  edges: CallEdge[],
+  edges: CallEdge[]
 ): string[] {
   const directCallers: string[] = [];
   const visited = new Set<string>();
   const sourceFiles = program
     .getSourceFiles()
-    .filter(
-      (sf) => !sf.isDeclarationFile && !sf.fileName.includes("node_modules"),
-    );
+    .filter((sf) => !sf.isDeclarationFile && !sf.fileName.includes("node_modules"));
 
   // Build a map of all functions and their calls for efficient lookup
   const functionCallMap = new Map<
@@ -220,7 +211,7 @@ function findCallers(
   function findCallersRecursive(
     funcName: string,
     currentDepth: number,
-    isDirectCaller: boolean,
+    isDirectCaller: boolean
   ): void {
     if (currentDepth >= maxDepth) return;
     if (visited.has(funcName)) return;
@@ -244,10 +235,7 @@ function findCallers(
         }
 
         // Add edge from caller to callee
-        const edgeKey = `${callerName}->${funcName}`;
-        const edgeExists = edges.some(
-          (e) => e.from === callerName && e.to === funcName,
-        );
+        const edgeExists = edges.some((e) => e.from === callerName && e.to === funcName);
         if (!edgeExists && data.info) {
           edges.push({
             from: callerName,
@@ -267,7 +255,7 @@ function findCallers(
 
   function getFunctionInfo(
     node: ts.Node,
-    sourceFile: ts.SourceFile,
+    sourceFile: ts.SourceFile
   ): {
     name: string;
     location: { file: string; line: number; column: number };
@@ -275,7 +263,7 @@ function findCallers(
   } | null {
     if (ts.isFunctionDeclaration(node) && node.name) {
       const { line, character } = sourceFile.getLineAndCharacterOfPosition(
-        node.getStart(sourceFile),
+        node.getStart(sourceFile)
       );
       return {
         name: node.name.text,
@@ -289,7 +277,7 @@ function findCallers(
     }
     if (ts.isMethodDeclaration(node) && ts.isIdentifier(node.name)) {
       const { line, character } = sourceFile.getLineAndCharacterOfPosition(
-        node.getStart(sourceFile),
+        node.getStart(sourceFile)
       );
       return {
         name: node.name.text,
@@ -304,11 +292,10 @@ function findCallers(
     if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
       if (
         node.initializer &&
-        (ts.isArrowFunction(node.initializer) ||
-          ts.isFunctionExpression(node.initializer))
+        (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer))
       ) {
         const { line, character } = sourceFile.getLineAndCharacterOfPosition(
-          node.getStart(sourceFile),
+          node.getStart(sourceFile)
         );
         return {
           name: node.name.text,

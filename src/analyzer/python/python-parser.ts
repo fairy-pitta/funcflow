@@ -4,7 +4,6 @@
  */
 
 import fs from "fs";
-import { logger } from "../../utils/logger.js";
 
 export interface PythonFunctionLocation {
   name: string;
@@ -63,10 +62,7 @@ export function parsePythonFile(filePath: string): PythonParseResult {
 /**
  * Parse Python content string
  */
-export function parsePythonContent(
-  content: string,
-  filePath: string,
-): PythonParseResult {
+export function parsePythonContent(content: string, filePath: string): PythonParseResult {
   const lines = content.split("\n");
   const functions: PythonFunctionLocation[] = [];
   const imports: PythonImport[] = [];
@@ -99,8 +95,7 @@ function parseImports(lines: string[], _filePath: string): PythonImport[] {
   const simpleImportRegex = /^import\s+(\w+(?:\.\w+)*)(?:\s+as\s+(\w+))?/;
 
   // Regex for 'from module import name1, name2' or 'from module import *'
-  const fromImportRegex =
-    /^from\s+(\w+(?:\.\w+)*)\s+import\s+(.+?)(?:\s*#.*)?$/;
+  const fromImportRegex = /^from\s+(\w+(?:\.\w+)*)\s+import\s+(.+?)(?:\s*#.*)?$/;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
@@ -187,7 +182,7 @@ function parseClasses(lines: string[], filePath: string): PythonClassInfo[] {
         lines.slice(i + 1, classEndLine),
         filePath,
         className,
-        i + 2,
+        i + 2
       );
 
       classes.push({
@@ -210,7 +205,7 @@ function parseMethodsInClass(
   lines: string[],
   filePath: string,
   className: string,
-  startLineOffset: number,
+  startLineOffset: number
 ): PythonFunctionLocation[] {
   const methods: PythonFunctionLocation[] = [];
 
@@ -244,8 +239,7 @@ function parseMethodsInClass(
       // Find method body
       const methodIndent = indent.length;
       const bodyStartLine = lineNum;
-      const bodyEndLine =
-        findBlockEnd(lines, i, methodIndent) + startLineOffset;
+      const bodyEndLine = findBlockEnd(lines, i, methodIndent) + startLineOffset;
 
       // Extract body
       const bodyLines = lines.slice(i + 1, bodyEndLine - startLineOffset + 1);
@@ -283,10 +277,7 @@ function parseMethodsInClass(
 /**
  * Parse top-level function definitions
  */
-function parseTopLevelFunctions(
-  lines: string[],
-  filePath: string,
-): PythonFunctionLocation[] {
+function parseTopLevelFunctions(lines: string[], filePath: string): PythonFunctionLocation[] {
   const functions: PythonFunctionLocation[] = [];
 
   // Regex for top-level function definition (no leading whitespace)
@@ -392,9 +383,7 @@ function parseParameters(paramsStr: string): string[] {
 /**
  * Find function calls within a function body
  */
-export function findCallsInPythonFunction(
-  func: PythonFunctionLocation,
-): PythonCallInfo[] {
+export function findCallsInPythonFunction(func: PythonFunctionLocation): PythonCallInfo[] {
   const calls: PythonCallInfo[] = [];
   const seenCalls = new Set<string>();
 
@@ -426,11 +415,7 @@ export function findCallsInPythonFunction(
 /**
  * Find function calls in a single line
  */
-function findCallsInLine(
-  line: string,
-  filePath: string,
-  lineNum: number,
-): PythonCallInfo[] {
+function findCallsInLine(line: string, filePath: string, lineNum: number): PythonCallInfo[] {
   const calls: PythonCallInfo[] = [];
 
   // Regex for function/method calls
@@ -515,11 +500,7 @@ function getIndent(line: string): number {
 /**
  * Find the end of a block (class or function body)
  */
-function findBlockEnd(
-  lines: string[],
-  startIndex: number,
-  blockIndent: number,
-): number {
+function findBlockEnd(lines: string[], startIndex: number, blockIndent: number): number {
   for (let i = startIndex + 1; i < lines.length; i++) {
     const line = lines[i];
 
@@ -544,7 +525,7 @@ function findBlockEnd(
 export function findPythonFunction(
   parseResult: PythonParseResult,
   functionName: string,
-  filePath?: string,
+  filePath?: string
 ): PythonFunctionLocation | undefined {
   for (const func of parseResult.functions) {
     if (func.name === functionName) {
@@ -561,7 +542,7 @@ export function findPythonFunction(
  */
 export function findAllPythonFunctions(
   parseResults: Map<string, PythonParseResult>,
-  functionName: string,
+  functionName: string
 ): PythonFunctionLocation[] {
   const results: PythonFunctionLocation[] = [];
 
@@ -579,10 +560,7 @@ export function findAllPythonFunctions(
 /**
  * Check if a function call is to a Python built-in function
  */
-export function isPythonBuiltIn(
-  name: string,
-  fullExpression?: string,
-): boolean {
+export function isPythonBuiltIn(name: string, fullExpression?: string): boolean {
   const builtIns = new Set([
     "print",
     "len",
@@ -702,10 +680,7 @@ export function isPythonBuiltIn(
     ];
 
     // If it's a method call on self/cls, we want to track it
-    if (
-      fullExpression.startsWith("self.") ||
-      fullExpression.startsWith("cls.")
-    ) {
+    if (fullExpression.startsWith("self.") || fullExpression.startsWith("cls.")) {
       return false;
     }
 
