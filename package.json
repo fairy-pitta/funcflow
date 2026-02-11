@@ -1,0 +1,55 @@
+{
+  "name": "funcflow",
+  "version": "0.1.0",
+  "description": "MCP server for analyzing function call graphs in TypeScript/JavaScript codebases",
+  "author": "fairy-pitta",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "funcflow": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "typescript": "^5.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^2.1.9",
+    "tsup": "^8.0.0",
+    "vitest": "^2.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "typescript",
+    "javascript",
+    "call-graph",
+    "static-analysis",
+    "function-calls"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fairy-pitta/funcflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fairy-pitta/funcflow/issues"
+  },
+  "homepage": "https://github.com/fairy-pitta/funcflow#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
