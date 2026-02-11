@@ -36,3 +36,14 @@ export interface VisualizeFunctionInput {
   /** Which direction to analyze */
   direction?: "callers" | "callees" | "both";
 }
+
+export interface AnalyzeImpactInput {
+  /** Name of the function to analyze impact for */
+  functionName: string;
+  /** Absolute path to project root directory */
+  projectRoot: string;
+  /** Optional: specific file path to search in */
+  filePath?: string;
+  /** How many levels deep to traverse for transitive impact (default: 3) */
+  depth?: number;
+}

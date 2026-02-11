@@ -105,8 +105,45 @@ export const VISUALIZE_CALLGRAPH = {
   },
 };
 
+export const ANALYZE_IMPACT = {
+  name: "analyze_impact",
+  description:
+    "Analyze the potential impact of changing a function. " +
+    "Shows risk score, transitive callers (callers of callers), circular dependencies, " +
+    "complexity metrics (fan-in/fan-out, hotspot detection), and actionable suggestions. " +
+    "Use this before making changes to understand what might break.",
+  inputSchema: {
+    type: "object" as const,
+    properties: {
+      functionName: {
+        type: "string",
+        description:
+          "Name of the function to analyze impact for (e.g., 'processOrder')",
+      },
+      projectRoot: {
+        type: "string",
+        description: "Absolute path to the project root directory",
+      },
+      filePath: {
+        type: "string",
+        description:
+          "Optional: specific file path to search in. If not provided, searches entire project.",
+      },
+      depth: {
+        type: "number",
+        description:
+          "How many levels of transitive callers to analyze (default: 3). " +
+          "Higher values show more distant impact but take longer.",
+        default: 3,
+      },
+    },
+    required: ["functionName", "projectRoot"],
+  },
+};
+
 export const ALL_TOOLS = [
   ANALYZE_FUNCTION_CALLS,
   FIND_FUNCTION,
   VISUALIZE_CALLGRAPH,
+  ANALYZE_IMPACT,
 ];
